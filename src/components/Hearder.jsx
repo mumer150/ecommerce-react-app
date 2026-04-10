@@ -47,7 +47,7 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full shadow-md bg-green-500 sticky top-0 z-50">
+    <header className="w-full shadow-md bg-green-50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         
         {/* LEFT */}
