@@ -5,12 +5,17 @@ import { App } from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { CartContext } from "./context/CartContext.jsx";
 import { ToastContext } from "./context/ToastContext.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <ToastContext>
       <CartContext>
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
       </CartContext>
     </ToastContext>
   </BrowserRouter>,

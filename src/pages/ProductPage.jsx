@@ -5,14 +5,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CartContexts } from "../context/CartContext";
 import { ToastContexts } from "../context/ToastContext";
 import useAuth from "../hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ProductPage() {
   const user = useAuth();
   const { cart, setCart } = useContext(CartContexts);
 
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  // const [product, setProduct] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const { AddedNotify, AlreadyAddedNotify } = useContext(ToastContexts);
@@ -23,6 +24,7 @@ export default function ProductPage() {
   };
 
   const addToCart = () => {
+    if (!product) return;
     const alreadyProductInCart = cart.find((item) => {
       return item.id === product.id;
     });
@@ -38,19 +40,28 @@ export default function ProductPage() {
 
   const { id } = useParams();
 
-  useEffect(() => {
-    const fetchSingleProduct = async () => {
-      try {
-        const data = await getSingleProduct(id);
-        setProduct(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSingleProduct();
-  }, [id]);
+  // useEffect(() => {
+  //   const fetchSingleProduct = async () => {
+  //     try {
+  //       const data = await getSingleProduct(id);
+  //       setProduct(data);
+  //     } catch (error) {
+  //       setError(error.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchSingleProduct();
+  // }, [id]);
+
+  const {
+    data: product,
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => getSingleProduct(id),
+  });
 
   if (loading)
     return (
@@ -65,7 +76,7 @@ export default function ProductPage() {
     return (
       <div className="flex justify-center items-center h-[60vh] px-4 text-center">
         <h2 className="text-lg md:text-2xl text-red-600">
-          Error: {error}
+          Error: {error.message}
         </h2>
       </div>
     );
@@ -74,13 +85,11 @@ export default function ProductPage() {
     <div className="min-h-screen bg-white">
       {/* Container */}
       <div className="max-w-7xl mx-auto px-4 py-6 md:py-10">
-        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-start">
-          
           {/* IMAGE */}
           <div className="w-full bg-green-50 rounded-xl p-4 sm:p-6 md:p-10 flex justify-center items-center">
             <img
-              src={product.images[0]}
+              src={product?.images?.[0]}
               alt="product"
               className="w-full max-w-xs sm:max-w-sm md:max-w-md object-contain"
             />
@@ -88,7 +97,6 @@ export default function ProductPage() {
 
           {/* DETAILS */}
           <div className="w-full flex flex-col bg-gray-100 p-4 sm:p-6 md:p-10 rounded-xl">
-            
             {/* Title */}
             <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-gray-800 leading-tight">
               {product.title}
@@ -124,7 +132,6 @@ export default function ProductPage() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 mt-6 md:mt-8">
-              
               <button
                 onClick={() => {
                   user ? addToCart() : navigate("/login");
@@ -142,7 +149,6 @@ export default function ProductPage() {
               >
                 Buy Now
               </button>
-
             </div>
           </div>
         </div>

@@ -1,25 +1,35 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { getProducts } from "../services/api";
+import { useQuery } from "@tanstack/react-query";
 
 export const Home = () => {
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  // const [products, setProducts] = useState([]);
+  // const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getProducts();
-        setProducts(data);
-      } catch (err) {
-        setError(err.message || "Failed to fetch products");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = await getProducts();
+  //       setProducts(data);
+  //     } catch (err) {
+  //       setError(err.message || "Failed to fetch products");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+
+  const {
+    data: products,
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
 
   if (loading)
     return (
@@ -47,7 +57,8 @@ export const Home = () => {
       </h1>
 
       {/* Responsive Grid with centered items */}
-      <div className="
+      <div
+        className="
         grid 
         grid-cols-1 
         sm:grid-cols-2 
@@ -57,8 +68,9 @@ export const Home = () => {
         md:gap-6 
         lg:gap-8
         justify-items-center
-      ">
-        {products.map((item) => (
+      "
+      >
+        {products?.map((item) => (
           <div key={item.id} className="w-full max-w-xs sm:max-w-[260px]">
             <ProductCard product={item} />
           </div>
