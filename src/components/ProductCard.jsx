@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function ProductCard({ product }) {
   return (
     <div className="bg-white border-green-50 border-2 shadow-md rounded-2xl p-4 w-full max-w-xs hover:shadow-lg transition">
-      <Link to={`/products/${product.id}`}>
+      <Link to={`/products/${product.id}`} onClick={()=>{scrollTo(0,0)}}>
         {/* Image */}
         <div className="h-40 flex items-center justify-center mb-4">
           <img
@@ -23,8 +23,6 @@ export default function ProductCard({ product }) {
       <p className="text-lg text-center font-bold text-green-600">
         ${product.price}
       </p>
-
-      
     </div>
   );
 }
