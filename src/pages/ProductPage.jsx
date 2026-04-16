@@ -6,6 +6,7 @@ import { CartContexts } from "../context/CartContext";
 import { ToastContexts } from "../context/ToastContext";
 import useAuth from "../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
+import ProductSkeleton from "../components/ProductSkeleton";
 
 export default function ProductPage() {
   const user = useAuth();
@@ -65,11 +66,7 @@ export default function ProductPage() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-[60vh]">
-        <h2 className="text-2xl md:text-5xl font-bold text-green-600 animate-pulse">
-          Loading...
-        </h2>
-      </div>
+      <ProductSkeleton/>
     );
 
   if (error)
