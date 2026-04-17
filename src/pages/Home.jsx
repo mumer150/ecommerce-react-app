@@ -1,10 +1,13 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { getProducts } from "../services/api";
 import { useQuery } from "@tanstack/react-query";
+import { Searchcontexts } from "../context/SearchContext";
 
 export const Home = () => {
   const [sortOrder, setSortOrder] = useState("");
+
+  const { search } = useContext(Searchcontexts);
 
   // const [products, setProducts] = useState([]);
   // const [error, setError] = useState("");
@@ -37,7 +40,13 @@ export const Home = () => {
   const sortedProducts = useMemo(() => {
     if (!products) return [];
 
-    const copy = [...products];
+    let copy = [...products];
+
+    if (search !== "") {
+      copy = copy.filter((item) =>
+        item.title.toLowerCase().includes(search.trim().toLowerCase()),
+      );
+    }
 
     if (sortOrder === "low") {
       return copy.sort((a, b) => a.price - b.price);
@@ -47,8 +56,8 @@ export const Home = () => {
       return copy.sort((a, b) => b.price - a.price);
     }
 
-    return products;
-  }, [products, sortOrder]);
+    return copy;
+  }, [products, sortOrder, search]);
 
   // LOADING STATE
   if (loading)

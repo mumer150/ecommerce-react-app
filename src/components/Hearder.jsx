@@ -1,16 +1,11 @@
-import {
-  ChevronDown,
-  ShoppingCart,
-  User,
-  Menu,
-  X,
-} from "lucide-react";
+import { ChevronDown, ShoppingCart, User, Menu, X, Search } from "lucide-react";
 import { useContext, useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContexts } from "../context/CartContext";
 import { logout } from "../firebase/authService";
 import useAuth from "../hooks/useAuth";
 import { ToastContexts } from "../context/ToastContext";
+import { Searchcontexts } from "../context/SearchContext";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -22,6 +17,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const dropdownRef = useRef();
+
+  const { search, setSearch } = useContext(Searchcontexts);
 
   // close dropdown on outside click
   useEffect(() => {
@@ -49,7 +46,6 @@ export default function Header() {
   return (
     <header className="w-full shadow-md bg-green-50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        
         {/* LEFT */}
         <div className="flex items-center gap-3">
           {/* Mobile Menu Button */}
@@ -75,8 +71,24 @@ export default function Header() {
         </nav> */}
 
         {/* RIGHT */}
+
         <div className="flex items-center gap-4 text-gray-700 relative">
-          
+          {/* SEARCH (compact + responsive) */}
+          <div className="relative hidden sm:block">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-32 md:w-44 lg:w-60 rounded-lg border border-gray-300 bg-white pl-8 pr-3 py-1.5 text-sm shadow-sm
+                 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-200 transition"
+            />
+
+            <div className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400">
+              <Search size={14} />
+            </div>
+          </div>
+
           {/* CART */}
           <Link to="/cart" className="relative">
             <ShoppingCart className="cursor-pointer hover:text-black" />
@@ -106,9 +118,7 @@ export default function Header() {
                 <div className="absolute right-0 mt-2 w-56 bg-white shadow-xl rounded-xl border z-50 overflow-hidden">
                   <div className="px-4 py-3 border-b bg-gray-50">
                     <p className="text-xs text-gray-500">Signed in as</p>
-                    <p className="text-sm font-medium truncate">
-                      {user.email}
-                    </p>
+                    <p className="text-sm font-medium truncate">{user.email}</p>
                   </div>
 
                   <button
