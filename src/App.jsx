@@ -16,7 +16,6 @@ import ForgotPassword from "./pages/ForgotPassword";
 
 export const App = () => {
   const user = useAuth();
-  console.log(user);
 
   return (
     <div className="min-h-screen flex flex-col">
